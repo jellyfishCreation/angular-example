@@ -1,10 +1,18 @@
 import { Routes } from '@angular/router';
 
-import { MovieList } from './features/movie-list/movie-list';
-
 export const routes: Routes = [
   {
     path: '',
-    component: MovieList,
+    redirectTo: 'movies',
+    pathMatch: 'full',
+  },
+  {
+    path: 'movies',
+    loadComponent: () => import('./pages/movie-list/movie-list').then((m) => m.MovieList),
+  },
+  {
+    path: 'movies/:id',
+    loadComponent: () =>
+      import('./pages/movie-overview/movie-overview').then((m) => m.MovieOverview),
   },
 ];

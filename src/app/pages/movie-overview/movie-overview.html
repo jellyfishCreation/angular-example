@@ -1,0 +1,27 @@
+@if (movie()?.data; as movie) {
+  <div class="flex flex-col md:flex-row gap-4 m-4">
+    <img
+      class="w-full md:w-80 h-auto rounded-2xl object-cover shadow-lg"
+      [src]="`http://localhost:1337${movie.poster.formats?.medium?.url}`"
+      [alt]="movie.title"
+    />
+    <div>
+      <h1 class="text-3xl font-bold mt-4 mb-1">
+        {{ movie.title }}
+        <span class="text-gray-500 font-normal">({{ movie.releaseDate | date: 'YYYY' }})</span>
+      </h1>
+      <p class="mb-2">
+        {{ movie.releaseDate | date: 'dd/MM/yyyy' }} -
+        @for (genre of movie.genres; track genre.id; let last = $last) {
+          {{ genre.name }}{{ !last ? ', ' : '' }}
+        }
+      </p>
+      <p class="mb-2"><strong>Rating:</strong> {{ movie.rating }}</p>
+      <blockquote class="border-l-4 border-gray-300 text-gray-500 text-lg pl-4 italic my-4">
+        {{ movie.tagline }}
+      </blockquote>
+      <h2 class="text-xl font-semibold mt-4">Overview</h2>
+      <p class="mt-4">{{ movie.overview }}</p>
+    </div>
+  </div>
+}
