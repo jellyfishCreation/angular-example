@@ -12,7 +12,8 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "tagline": {
       "type": "string"
@@ -28,8 +29,7 @@
     "genres": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::genre.genre",
-      "mappedBy": "movie"
+      "target": "api::genre.genre"
     },
     "poster": {
       "type": "media",
