@@ -10,6 +10,6 @@
 # Nice to Have/Do
 
 - Light/Dark Mode
-- Add More Movies
-- Add Snackbar with Notifications (e.g Error)
+- Add More Movies - DONE
+- Add Snackbar with Notifications (e.g Error) - DONE
 - Add Chips to Genre Filter
