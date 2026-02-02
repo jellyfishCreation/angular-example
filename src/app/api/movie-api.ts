@@ -6,17 +6,17 @@ import * as qs from 'qs';
 import { environment } from '../../environments/environments';
 
 import { StrapiResponse } from '../models/strapi';
-import { Movie, MovieSearchParams } from '../models/movies';
+import { Movie, MovieRequestParams } from '../models/movies';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MovieApi {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-  populateValues = ['genres', 'poster'];
+  readonly populateValues = ['genres', 'poster'];
 
-  getMovies(searchParams: MovieSearchParams): Observable<StrapiResponse<Movie[]>> {
+  getMovies(searchParams: MovieRequestParams): Observable<StrapiResponse<Movie[]>> {
     const queryParams = qs.stringify(
       {
         sort: searchParams.sort,

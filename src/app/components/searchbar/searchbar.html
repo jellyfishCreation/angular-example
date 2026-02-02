@@ -1,0 +1,36 @@
+<div class="flex gap-4 flex-col">
+  <h1 class="text-2xl font-bold">Movie List</h1>
+
+  <div class="flex items-center gap-4">
+    <mat-form-field>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [formField]="searchForm.search" />
+      @if (searchForm.search().value()) {
+        <button matSuffix matIconButton aria-label="Clear" (click)="resetSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Sort By</mat-label>
+      <mat-select [formField]="searchForm.sort">
+        <mat-option value="title:asc">Title</mat-option>
+        <mat-option value="releaseDate:desc">Release Date</mat-option>
+        <mat-option [value]="['rating:desc', 'title:asc']">Rating</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Genre</mat-label>
+      <mat-select [formField]="searchForm.genreId">
+        @if (genresFailed()) {
+          <mat-option value="">Loading Genres Failed</mat-option>
+        } @else {
+          <mat-option value="">All Genres</mat-option>
+          @for (genre of genres() || []; track genre.id) {
+            <mat-option [value]="genre.documentId">{{ genre.name }}</mat-option>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

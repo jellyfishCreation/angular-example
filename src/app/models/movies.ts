@@ -18,6 +18,9 @@ export interface MovieSearchParams {
   search: string;
   sort: MovieSortOption;
   genreId: string;
+}
+
+export interface MovieRequestParams extends MovieSearchParams {
   page: number;
 }
 

@@ -5,7 +5,7 @@
 - Add Search Params to Page Url - DONE
 - Simple ErrorHandling - DONE
 - Better Navigation Layout - DONE
-- More Atomic/Reuserble Components
+- More Atomic/Reuserble Components - DONE'ish
 
 # Nice to Have/Do
 

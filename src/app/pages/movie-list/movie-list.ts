@@ -1,79 +1,51 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { debounce, form, FormField } from '@angular/forms/signals';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+// import { FormsModule } from '@angular/forms';
+// import { debounce, form, FormField } from '@angular/forms/signals';
+// import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
+// import { MatFormFieldModule } from '@angular/material/form-field';
+// import { MatSelectModule } from '@angular/material/select';
+// import { MatButtonModule } from '@angular/material/button';
+// import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MovieApi } from '../../api/movie-api';
-import { GenreApi } from '../../api/genre-api';
+// import { GenreApi } from '../../api/genre-api';
 
-import { Genre, Movie, MovieSearchParams, MovieSortOption } from '../../models/movies';
+import { Movie, MovieRequestParams } from '../../models/movies';
+
+import { Searchbar } from '../../components/searchbar/searchbar';
 
 @Component({
   selector: 'app-movie-list',
-  imports: [
-    RouterModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    FormField,
-    DatePipe,
-  ],
+  imports: [RouterModule, MatIconModule, MatProgressSpinnerModule, Searchbar, DatePipe],
   templateUrl: './movie-list.html',
   styleUrl: './movie-list.css',
 })
 export class MovieList {
-  router = inject(Router);
-  route = inject(ActivatedRoute);
   movieApi = inject(MovieApi);
-  genreApi = inject(GenreApi);
 
-  queryParams = toSignal(this.route.queryParamMap);
-
-  searchModel = signal<MovieSearchParams>({
-    search: this.queryParams()?.get('search') || '',
-    sort: (this.queryParams()?.get('sort') as MovieSortOption) || 'title:asc',
-    genreId: this.queryParams()?.get('genreId') || '',
+  searchModel = signal<MovieRequestParams>({
+    search: '',
+    sort: 'title:asc',
+    genreId: '',
     page: 1,
   });
-
-  page = signal(1);
   pageCount = signal<number | null>(null);
 
   initialLoad = signal(false);
   movies = signal<Movie[] | null>(null);
   moviesFailed = signal(false);
-  genres = signal<Genre[] | null>(null);
-  genresFailed = signal(false);
 
-  request = computed(() => ({
-    search: this.searchForm.search().value(),
-    sort: this.searchForm.sort().value(),
-    genreId: this.searchForm.genreId().value(),
-  }));
-
-  searchForm = form(this.searchModel, (s) => {
-    debounce(s.search, 300);
-  });
-
-  constructor() {
-    this.onSearchChange();
-    this.getGenres();
+  setSearchModel(searchParams: MovieRequestParams) {
+    this.searchModel.set(searchParams);
+    this.getMovies(this.searchModel());
   }
 
-  getMovies(searchParams: MovieSearchParams, append = false) {
+  getMovies(searchParams: MovieRequestParams, append = false) {
     if (this.pageCount() && searchParams.page > this.pageCount()!) return;
 
     if (this.movies() === null) {
@@ -99,35 +71,13 @@ export class MovieList {
     });
   }
 
-  getGenres() {
-    this.genreApi.getGenres().subscribe((response) => {
-      this.genres.set(response);
-    });
-  }
-
-  onSearchChange() {
-    toObservable(this.request).subscribe((value) => {
-      this.page.set(1);
-      this.resetQueryParams();
-      this.getMovies({ ...value, page: this.page() });
-    });
-  }
-
-  resetSearch() {
-    this.searchForm.search().value.set('');
-  }
-
-  resetQueryParams() {
-    this.router.navigate([], { queryParams: this.request(), queryParamsHandling: 'merge' });
-  }
-
   onScroll(event: Event) {
     if (!this.atBottom(event)) {
       return;
     }
 
-    this.page.update((prev) => prev + 1);
-    this.getMovies({ ...this.request(), page: this.page() }, true);
+    this.searchModel.update((s) => ({ ...s, page: s.page + 1 }));
+    this.getMovies(this.searchModel(), true);
   }
 
   private atBottom(event: Event) {
