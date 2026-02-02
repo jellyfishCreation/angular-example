@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environments';
 
-export function authInterceptor(
+export function AuthInterceptor(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {

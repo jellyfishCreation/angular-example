@@ -52,9 +52,11 @@ export class MovieList {
   page = signal(1);
   pageCount = signal<number | null>(null);
 
-  isMoviesLoading = signal(false);
+  initialLoad = signal(false);
   movies = signal<Movie[] | null>(null);
+  moviesFailed = signal(false);
   genres = signal<Genre[] | null>(null);
+  genresFailed = signal(false);
 
   request = computed(() => ({
     search: this.searchForm.search().value(),
@@ -75,19 +77,25 @@ export class MovieList {
     if (this.pageCount() && searchParams.page > this.pageCount()!) return;
 
     if (this.movies() === null) {
-      this.isMoviesLoading.set(true);
+      this.initialLoad.set(true);
     }
 
-    this.movieApi.getMovies(searchParams).subscribe((response) => {
-      this.pageCount.set(response.meta.pagination?.pageCount || null);
+    this.movieApi.getMovies(searchParams).subscribe({
+      next: (response) => {
+        this.pageCount.set(response.meta.pagination?.pageCount || null);
 
-      if (append) {
-        this.movies.update((prev) => [...(prev || []), ...response.data]);
-      } else {
-        this.movies.set(response.data);
-      }
+        if (append) {
+          this.movies.update((prev) => [...(prev || []), ...response.data]);
+        } else {
+          this.movies.set(response.data);
+        }
 
-      this.isMoviesLoading.set(false);
+        this.initialLoad.set(false);
+      },
+      error: () => {
+        this.moviesFailed.set(true);
+        this.initialLoad.set(false);
+      },
     });
   }
 

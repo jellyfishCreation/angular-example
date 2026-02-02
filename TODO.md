@@ -3,7 +3,7 @@
 - Static List Search on Top - DONE
 - Lazyload more movies on Scroll - DONE
 - Add Search Params to Page Url - DONE
-- ErrorHandling
+- Simple ErrorHandling - DONE
 - Better Navigation Layout
 - More Atomic/Reuserble Components
 

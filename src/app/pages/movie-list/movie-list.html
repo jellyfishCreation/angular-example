@@ -32,13 +32,18 @@
     </div>
   </div>
   <div class="overflow-y-auto pb-4" (scroll)="onScroll($event)">
-    @if (isMoviesLoading()) {
+    @if (initialLoad()) {
       <div class="flex justify-center items-center h-32">
         <mat-spinner></mat-spinner>
       </div>
     } @else if (movies()?.length === 0) {
       <div class="flex flex-col justify-center items-center h-32">
         <p class="text-gray-500 text-lg">There were no matches for your search term.</p>
+      </div>
+    } @else if (moviesFailed()) {
+      <div class="flex flex-col justify-center items-center h-32 text-red-700!">
+        <mat-icon class="text-6xl! size-16!">error</mat-icon>
+        <p class="text-lg">The request failed to load. Please refresh and try again.</p>
       </div>
     } @else {
       <div class="flex flex-wrap gap-2">
