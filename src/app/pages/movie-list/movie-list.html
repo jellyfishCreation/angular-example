@@ -1,59 +1,67 @@
-<div class="p-4">
-  <h1 class="text-2xl font-bold mb-4">Movie List</h1>
+<div class="p-4 max-h-fit flex flex-col overflow-hidden">
+  <div class="flex gap-4 flex-col">
+    <h1 class="text-2xl font-bold">Movie List</h1>
 
-  <div class="flex items-center gap-4 mb-4">
-    <mat-form-field>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput type="text" [formField]="searchForm.search" />
-      @if (searchForm.search().value()) {
-        <button matSuffix matIconButton aria-label="Clear" (click)="resetSearch()">
-          <mat-icon>close</mat-icon>
-        </button>
-      }
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Sort By</mat-label>
-      <mat-select [formField]="searchForm.sort">
-        <mat-option value="title:asc">Title</mat-option>
-        <mat-option value="releaseDate:desc">Release Date</mat-option>
-        <mat-option [value]="['rating:desc', 'title:asc']">Rating</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Genre</mat-label>
-      <mat-select [formField]="searchForm.filters.genreId">
-        <mat-option value="">All Genres</mat-option>
-        @for (genre of genres()?.data || []; track genre.id) {
-          <mat-option [value]="genre.documentId">{{ genre.name }}</mat-option>
+    <div class="flex items-center gap-4">
+      <mat-form-field>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput type="text" [formField]="searchForm.search" />
+        @if (searchForm.search().value()) {
+          <button matSuffix matIconButton aria-label="Clear" (click)="resetSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
         }
-      </mat-select>
-    </mat-form-field>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Sort By</mat-label>
+        <mat-select [formField]="searchForm.sort">
+          <mat-option value="title:asc">Title</mat-option>
+          <mat-option value="releaseDate:desc">Release Date</mat-option>
+          <mat-option [value]="['rating:desc', 'title:asc']">Rating</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Genre</mat-label>
+        <mat-select [formField]="searchForm.genreId">
+          <mat-option value="">All Genres</mat-option>
+          @for (genre of genres() || []; track genre.id) {
+            <mat-option [value]="genre.documentId">{{ genre.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
-
-  @if (loading()) {
-    <p>Loading movies...</p>
-  } @else if (movies()?.data?.length === 0) {
-    <p>No movies found.</p>
-  } @else {
-    <div class="flex flex-wrap gap-2">
-      @for (movie of movies()?.data || []; track movie.id) {
-        <a [routerLink]="['/movies/', movie.documentId]" class="basis-40">
-          <div class="rounded-2xl shadow-lg overflow-hidden">
-            <img
-              class="w-full h-64 object-cover"
-              [src]="`http://localhost:1337${movie.poster.formats?.small?.url}`"
-              [alt]="movie.title"
-            />
-            <div class="p-4">
-              <h2 class="text-md font-bold">{{ movie.title }}</h2>
-              <p class="text-sm text-slate-600">{{ movie.releaseDate | date: 'mediumDate' }}</p>
-              <div>
-                <p class="text-sm text-slate-600">{{ movie.rating }}</p>
+  <div class="overflow-y-auto pb-4" (scroll)="onScroll($event)">
+    @if (isMoviesLoading()) {
+      <div class="flex justify-center items-center h-32">
+        <mat-spinner></mat-spinner>
+      </div>
+    } @else if (movies()?.length === 0) {
+      <div class="flex flex-col justify-center items-center h-32">
+        <p class="text-gray-500 text-lg">There were no matches for your search term.</p>
+      </div>
+    } @else {
+      <div class="flex flex-wrap gap-2">
+        @for (movie of movies() || []; track movie.id) {
+          <a [routerLink]="['/movies/', movie.documentId]" class="basis-40">
+            <div class="rounded-2xl h-full shadow-lg overflow-hidden">
+              <img
+                class="w-full h-64 object-cover"
+                [src]="`http://localhost:1337${movie.poster.formats?.small?.url}`"
+                [alt]="movie.title"
+              />
+              <div class="p-4">
+                <h2 class="text-md font-bold">{{ movie.title }}</h2>
+                <p class="text-sm text-slate-600">{{ movie.releaseDate | date: 'mediumDate' }}</p>
+                <div class="flex items-center mt-2">
+                  <mat-icon class="text-yellow-500! text-sm! size-5!">star</mat-icon>
+                  <p class="text-sm text-slate-600">{{ movie.rating }}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </a>
-      }
-    </div>
-  }
+          </a>
+        }
+      </div>
+    }
+  </div>
 </div>

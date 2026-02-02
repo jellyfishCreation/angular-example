@@ -16,8 +16,9 @@ export interface Genre extends StrapiBaseData {
 
 export interface MovieSearchParams {
   search: string;
-  sort: 'title:asc' | 'releaseDate:desc' | ['rating:desc', 'title:asc'];
-  filters: {
-    genreId: string;
-  };
+  sort: MovieSortOption;
+  genreId: string;
+  page: number;
 }
+
+export type MovieSortOption = 'title:asc' | 'releaseDate:desc' | ['rating:desc', 'title:asc'];

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import * as qs from 'qs';
 
 import { environment } from '../../environments/environments';
@@ -24,11 +24,10 @@ export class MovieApi {
         filters: {
           title: searchParams.search ? { $containsi: searchParams.search } : undefined,
           genres: {
-            documentId: searchParams.filters.genreId
-              ? { $eq: searchParams.filters.genreId }
-              : undefined,
+            documentId: searchParams.genreId ? { $eq: searchParams.genreId } : undefined,
           },
         },
+        pagination: { page: searchParams.page, pageSize: 25 },
       },
       { encodeValuesOnly: true },
     );
@@ -38,7 +37,7 @@ export class MovieApi {
     return this.http.get<StrapiResponse<Movie[]>>(`${environment.apiUrl}/movies`, { params });
   }
 
-  getMovieById(id: string): Observable<StrapiResponse<Movie>> {
+  getMovieById(id: string): Observable<Movie> {
     const queryParams = qs.stringify(
       {
         populate: this.populateValues,
@@ -48,6 +47,8 @@ export class MovieApi {
 
     const params = new HttpParams({ fromString: queryParams });
 
-    return this.http.get<StrapiResponse<Movie>>(`${environment.apiUrl}/movies/${id}`, { params });
+    return this.http
+      .get<StrapiResponse<Movie>>(`${environment.apiUrl}/movies/${id}`, { params })
+      .pipe(map((response) => response.data));
   }
 }

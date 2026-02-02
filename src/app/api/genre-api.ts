@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { environment } from '../../environments/environments';
 
@@ -13,7 +13,9 @@ import { Genre } from '../models/movies';
 export class GenreApi {
   private http = inject(HttpClient);
 
-  getGenres(): Observable<StrapiResponse<Genre[]>> {
-    return this.http.get<StrapiResponse<Genre[]>>(`${environment.apiUrl}/genres`);
+  getGenres(): Observable<Genre[]> {
+    return this.http
+      .get<StrapiResponse<Genre[]>>(`${environment.apiUrl}/genres`)
+      .pipe(map((response) => response.data));
   }
 }

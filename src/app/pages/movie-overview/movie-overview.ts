@@ -1,15 +1,16 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import { MatIconModule } from '@angular/material/icon';
 
 import { MovieApi } from '../../api/movie-api';
 
-import { StrapiResponse } from '../../models/strapi';
 import { Movie } from '../../models/movies';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-movie-overview',
-  imports: [RouterModule, DatePipe],
+  imports: [RouterModule, MatIconModule, DatePipe],
   templateUrl: './movie-overview.html',
   styleUrl: './movie-overview.css',
 })
@@ -18,7 +19,7 @@ export class MovieOverview implements OnInit {
 
   id = input.required<string>();
 
-  movie = signal<StrapiResponse<Movie> | null>(null);
+  movie = signal<Movie | null>(null);
 
   ngOnInit() {
     this.getMovie(this.id());

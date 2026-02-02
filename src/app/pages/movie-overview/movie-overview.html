@@ -1,4 +1,4 @@
-@if (movie()?.data; as movie) {
+@if (movie(); as movie) {
   <div class="flex flex-col md:flex-row gap-4 m-4">
     <img
       class="w-full md:w-80 h-auto rounded-2xl object-cover shadow-lg"
@@ -16,7 +16,11 @@
           {{ genre.name }}{{ !last ? ', ' : '' }}
         }
       </p>
-      <p class="mb-2"><strong>Rating:</strong> {{ movie.rating }}</p>
+      <p class="mb-2 flex items-center">
+        <strong>Rating:</strong>
+        <mat-icon class="text-yellow-500! text-center text-sm! size-5!">star</mat-icon>
+        {{ movie.rating }}
+      </p>
       <blockquote class="border-l-4 border-gray-300 text-gray-500 text-lg pl-4 italic my-4">
         {{ movie.tagline }}
       </blockquote>
