@@ -4,7 +4,7 @@
 - Lazyload more movies on Scroll - DONE
 - Add Search Params to Page Url - DONE
 - Simple ErrorHandling - DONE
-- Better Navigation Layout
+- Better Navigation Layout - DONE
 - More Atomic/Reuserble Components
 
 # Nice to Have/Do
