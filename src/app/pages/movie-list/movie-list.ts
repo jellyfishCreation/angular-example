@@ -1,19 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
-// import { FormsModule } from '@angular/forms';
-// import { debounce, form, FormField } from '@angular/forms/signals';
-// import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatSelectModule } from '@angular/material/select';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MovieApi } from '../../api/movie-api';
-// import { GenreApi } from '../../api/genre-api';
 
 import { Movie, MovieRequestParams } from '../../models/movies';
 
