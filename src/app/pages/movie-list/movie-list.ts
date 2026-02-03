@@ -26,26 +26,26 @@ import { Searchbar } from '../../components/searchbar/searchbar';
   styleUrl: './movie-list.css',
 })
 export class MovieList {
-  movieApi = inject(MovieApi);
+  protected movieApi = inject(MovieApi);
 
-  searchModel = signal<MovieRequestParams>({
+  protected searchModel = signal<MovieRequestParams>({
     search: '',
     sort: 'title:asc',
     genreId: '',
     page: 1,
   });
-  pageCount = signal<number | null>(null);
+  protected pageCount = signal<number | null>(null);
 
-  initialLoad = signal(false);
-  movies = signal<Movie[] | null>(null);
-  moviesFailed = signal(false);
+  protected initialLoad = signal(false);
+  protected movies = signal<Movie[] | null>(null);
+  protected moviesFailed = signal(false);
 
-  setSearchModel(searchParams: MovieRequestParams) {
+  protected setSearchModel(searchParams: MovieRequestParams) {
     this.searchModel.set(searchParams);
     this.getMovies(this.searchModel());
   }
 
-  getMovies(searchParams: MovieRequestParams, append = false) {
+  private getMovies(searchParams: MovieRequestParams, append = false) {
     if (this.pageCount() && searchParams.page > this.pageCount()!) return;
 
     if (this.movies() === null) {
@@ -71,7 +71,7 @@ export class MovieList {
     });
   }
 
-  onScroll(event: Event) {
+  protected onScroll(event: Event) {
     if (!this.atBottom(event)) {
       return;
     }

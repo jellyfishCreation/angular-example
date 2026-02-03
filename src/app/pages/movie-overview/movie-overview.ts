@@ -15,17 +15,17 @@ import { Movie } from '../../models/movies';
   styleUrl: './movie-overview.css',
 })
 export class MovieOverview implements OnInit {
-  readonly movieApi = inject(MovieApi);
+  protected readonly movieApi = inject(MovieApi);
 
-  id = input.required<string>();
+  protected id = input.required<string>();
 
-  movie = signal<Movie | null>(null);
+  protected movie = signal<Movie | null>(null);
 
   ngOnInit() {
     this.getMovie(this.id());
   }
 
-  getMovie(id: string) {
+  protected getMovie(id: string) {
     this.movieApi.getMovieById(id).subscribe((response) => {
       this.movie.set(response);
     });

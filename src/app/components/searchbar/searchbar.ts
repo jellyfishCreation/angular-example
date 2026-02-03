@@ -29,30 +29,30 @@ import { Genre, MovieRequestParams, MovieSearchParams, MovieSortOption } from '.
   styleUrl: './searchbar.css',
 })
 export class Searchbar {
-  readonly genreApi = inject(GenreApi);
-  readonly router = inject(Router);
-  readonly route = inject(ActivatedRoute);
+  protected readonly genreApi = inject(GenreApi);
+  protected readonly router = inject(Router);
+  protected readonly route = inject(ActivatedRoute);
 
-  readonly searchChanged = output<MovieRequestParams>();
+  protected readonly searchChanged = output<MovieRequestParams>();
 
-  genres = signal<Genre[] | null>(null);
-  genresFailed = signal(false);
+  protected genres = signal<Genre[] | null>(null);
+  protected genresFailed = signal(false);
 
-  queryParams = toSignal(this.route.queryParamMap);
+  protected queryParams = toSignal(this.route.queryParamMap);
 
-  searchModel = signal<MovieSearchParams>({
+  protected searchModel = signal<MovieSearchParams>({
     search: this.queryParams()?.get('search') || '',
     sort: (this.queryParams()?.get('sort') as MovieSortOption) || 'title:asc',
     genreId: this.queryParams()?.get('genreId') || '',
   });
 
-  request = computed(() => ({
+  protected request = computed(() => ({
     search: this.searchForm.search().value(),
     sort: this.searchForm.sort().value(),
     genreId: this.searchForm.genreId().value(),
   }));
 
-  searchForm = form(this.searchModel, (s) => {
+  protected searchForm = form(this.searchModel, (s) => {
     debounce(s.search, 300);
   });
 
@@ -61,25 +61,24 @@ export class Searchbar {
     this.getGenres();
   }
 
-  getGenres() {
+  protected getGenres() {
     this.genreApi.getGenres().subscribe((response) => {
       this.genres.set(response);
     });
   }
 
-  onSearchChange() {
+  protected onSearchChange() {
     toObservable(this.request).subscribe((value) => {
-      console.log('GDFVV');
       this.updateQueryParams();
       this.searchChanged.emit({ ...value, page: 1 });
     });
   }
 
-  resetSearch() {
+  protected resetSearch() {
     this.searchForm.search().value.set('');
   }
 
-  updateQueryParams() {
+  protected updateQueryParams() {
     this.router.navigate([], { queryParams: this.request(), queryParamsHandling: 'merge' });
   }
 }
